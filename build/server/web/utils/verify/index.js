@@ -9,9 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const koa_1 = require("koa");
-const app = new koa_1.default();
-app.use((ctx) => __awaiter(void 0, void 0, void 0, function* () {
-    ctx.body = 'Hello World';
-}));
-app.listen(3000);
+exports.verify = void 0;
+const jwt = require("jsonwebtoken");
+const jwt_1 = require("../../../const/jwt");
+const verify = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = ctx.headers['authorization'];
+    if (!token) {
+        ctx.status = 403;
+        ctx.body = {
+            message: 'No Token Provided.'
+        };
+        return;
+    }
+    try {
+        const decode = jwt.verify(token, jwt_1.JWT_SECRET);
+        ctx.state.userId = decode.id;
+        yield next();
+    }
+    catch (error) {
+        ctx.status = 500;
+        ctx.body = {
+            message: 'Fail to authenticate token.'
+        };
+    }
+});
+exports.verify = verify;

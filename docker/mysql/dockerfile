@@ -1,0 +1,10 @@
+FROM mysql:5.7
+
+ENV MYSQL_ROOT_PASSWORD chatbot-pw
+ENV MYSQL_DATABASE chatbot
+ENV MYSQL_USER chatbot-user
+ENV MYSQL_PASSWORD chatbot-user-pw
+
+COPY ./docker-entrypoint-initdb.d/ /docker-entrypoint-initdb.d/
+
+EXPOSE 3306
