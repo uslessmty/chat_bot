@@ -1,0 +1,1 @@
+export const HOST = 'https://one.aiskt.com/v1/';

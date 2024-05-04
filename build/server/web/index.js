@@ -5,13 +5,15 @@ const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const json = require("koa-json");
 const user_1 = require("./utils/router/user");
-require("./utils/vector");
+const chat_1 = require("./utils/router/chat");
 (0, dotenv_1.config)();
 const app = new Koa();
 app.use(bodyParser());
 app.use(json());
 app.use(user_1.router.routes())
     .use(user_1.router.allowedMethods());
+app.use(chat_1.router.routes())
+    .use(chat_1.router.allowedMethods());
 app.listen(3000, () => {
     console.log('listening...');
 });

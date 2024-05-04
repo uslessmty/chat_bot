@@ -9,6 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "@zilliz/milvus2-sdk-node": "2.2.24",
+    "openai": "4.33.1",
     "bcryptjs": "2.4.3",
     "dotenv": "16.4.5",
     "jsonwebtoken": "9.0.2",

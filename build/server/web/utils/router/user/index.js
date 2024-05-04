@@ -13,8 +13,8 @@ exports.router = void 0;
 const Router = require("koa-router");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const db_1 = require("../../db");
 const jwt_1 = require("../../../../const/jwt");
+const db_1 = require("../../../../db");
 const router = new Router();
 exports.router = router;
 const PREFIX = '/api/user';
@@ -27,11 +27,12 @@ router.post(`${PREFIX}/register`, (ctx) => __awaiter(void 0, void 0, void 0, fun
     }
     const hashedPassword = bcrypt.hashSync(password, 8);
     try {
-        yield db_1.db.query('INSERT INTO user (username, password) VALUES (?, ?)', [username, hashedPassword]);
+        yield db_1.db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
         ctx.status = 201;
         ctx.body = { message: 'User created' };
     }
     catch (error) {
+        console.log('error', error);
         ctx.status = 500;
         ctx.body = 'Error on the server.';
     }
@@ -44,7 +45,7 @@ router.post(`${PREFIX}/login`, (ctx) => __awaiter(void 0, void 0, void 0, functi
         return;
     }
     try {
-        const [results] = yield db_1.db.query('SELECT * FROM user WHERE username = ?', [username]);
+        const [results] = yield db_1.db.query('SELECT * FROM users WHERE username = ?', [username]);
         console.log('results', results);
         if (results.length === 0) {
             ctx.status = 404;
@@ -52,6 +53,7 @@ router.post(`${PREFIX}/login`, (ctx) => __awaiter(void 0, void 0, void 0, functi
             return;
         }
         const user = results[0];
+        console.log('user', user);
         if (!user) {
             throw 'Error on the server.';
         }
@@ -61,7 +63,7 @@ router.post(`${PREFIX}/login`, (ctx) => __awaiter(void 0, void 0, void 0, functi
             ctx.body = { message: 'username or password wrong.' };
             return;
         }
-        const token = jwt.sign({ id: user.id }, jwt_1.JWT_SECRET, {
+        const token = jwt.sign({ id: user.user_id }, jwt_1.JWT_SECRET, {
             expiresIn: 86400000 // 24 * 1000 hours
         });
         ctx.status = 200;

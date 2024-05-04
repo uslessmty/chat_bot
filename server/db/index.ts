@@ -1,5 +1,5 @@
 import * as mysql from 'mysql2/promise';
-import { DATABASE, HOST, PASSWORD, USERNAME } from '../../../const/db';
+import { DATABASE, HOST, PASSWORD, USERNAME } from '../const/db';
 
 export const db = mysql.createPool({
     host: HOST,

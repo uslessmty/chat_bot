@@ -1,9 +1,9 @@
 import * as Router from 'koa-router';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { db } from '../../db';
-import { JWT_SECRET } from '../../../../const/jwt';
 import { QueryResult } from 'mysql2';
+import { JWT_SECRET } from '../../../../const/jwt';
+import { db } from '../../../../db';
 
 type Customer = {
     request: {
@@ -29,10 +29,11 @@ router.post(`${PREFIX}/register`, async (ctx) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     try {
-      await db.query('INSERT INTO user (username, password) VALUES (?, ?)', [username, hashedPassword]);
+      await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
       ctx.status = 201;
       ctx.body = { message: 'User created' };
     } catch (error) {
+      console.log('error', error);
       ctx.status = 500;
       ctx.body = 'Error on the server.';
     }
@@ -51,7 +52,7 @@ router.post(`${PREFIX}/login`, async (ctx) => {
     try {
       const [results] = await db.query<QueryResult & {
         length?: number
-      }>('SELECT * FROM user WHERE username = ?', [username]);
+      }>('SELECT * FROM users WHERE username = ?', [username]);
 
       console.log('results', results);
 
@@ -62,6 +63,7 @@ router.post(`${PREFIX}/login`, async (ctx) => {
       }
   
       const user = results[0];
+      console.log('user', user);
       if (!user) {
         throw 'Error on the server.';
       }
@@ -73,7 +75,7 @@ router.post(`${PREFIX}/login`, async (ctx) => {
         ctx.body = { message: 'username or password wrong.' };
         return;
       }
-      const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+      const token = jwt.sign({ id: user.user_id }, JWT_SECRET, {
         expiresIn: 86400000 // 24 * 1000 hours
       });
   

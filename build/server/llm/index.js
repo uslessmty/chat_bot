@@ -9,29 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verify = void 0;
-const jwt = require("jsonwebtoken");
-const jwt_1 = require("../../../const/jwt");
-const verify = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = ctx.headers['authorization'];
-    if (!token) {
-        ctx.status = 403;
-        ctx.body = {
-            message: 'No Token Provided.'
-        };
-        return;
-    }
-    try {
-        const decode = jwt.verify(token, jwt_1.JWT_SECRET);
-        console.log('decode', decode);
-        ctx.state.userId = decode.id;
-        yield next();
-    }
-    catch (error) {
-        ctx.status = 500;
-        ctx.body = {
-            message: 'Fail to authenticate token.'
-        };
-    }
-});
-exports.verify = verify;
+exports.getInstance = void 0;
+const openai_1 = require("openai");
+const llm_1 = require("../const/llm");
+const getInstance = (config) => {
+    const instance = new openai_1.OpenAI({
+        apiKey: config.token,
+        baseURL: llm_1.HOST,
+    });
+    instance.chat.completions.create;
+    return {
+        create: (params) => __awaiter(void 0, void 0, void 0, function* () {
+            return instance.chat.completions.create({
+                messages: params.messages,
+                model: "gpt-3.5-turbo",
+            });
+        })
+    };
+};
+exports.getInstance = getInstance;
