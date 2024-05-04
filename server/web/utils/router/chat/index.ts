@@ -2,6 +2,7 @@ import * as Router from 'koa-router';
 import { verify } from '../../verify';
 import { db } from '../../../../db';
 import { QueryResult } from 'mysql2';
+import { getInstance } from '../../../../llm';
 
 const router = new Router<any, any>();
 
@@ -40,6 +41,55 @@ router.post(`${PREFIX}/newconversation`, verify, async (ctx) => {
         ctx.status = 500;
         ctx.body = 'Error on the server.';
       }
+});
+
+router.post(`${PREFIX}/dialog`, verify, async (ctx) => {
+    try {
+        const { userId } = ctx.state;
+        const { windowId, message } = ctx.request.body;
+    
+        if (!windowId || !message) {
+            ctx.status = 400;
+            ctx.body = { message: 'have no windowId or message.' };
+            return;
+        }
+    
+        const [results] = await db.query<QueryResult & {
+            length?: number
+          }>('SELECT * FROM chat_windows WHERE window_id = ? AND user_id = ?', [windowId, userId]);
+        
+        if (results.length === 0) {
+            ctx.status = 404;
+            ctx.body = 'No window found.';
+            return;
+        }
+    
+        const currentWindow = results[0];
+        if (!currentWindow) {
+          throw 'Error on the server.';
+        }
+    
+        const avatar = currentWindow.avatar;
+    
+        const openAIClient = getInstance({
+            token: ''
+        });
+    
+        const openAIResult = await openAIClient.create({
+            messages: [
+                { role: "system", content: avatar },
+                { role: "user", content: message },
+            ],
+        });
+    
+        console.log('completion.choices[0].message', openAIResult.choices[0].message)
+    
+        ctx.status = 200;
+        ctx.body = currentWindow;
+    } catch (error) {
+        ctx.status = 500;
+        ctx.body = 'Error on the server.';
+    }
 });
 
 export {

@@ -23,7 +23,6 @@ const verify = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
     }
     try {
         const decode = jwt.verify(token, jwt_1.JWT_SECRET);
-        console.log('decode', decode);
         ctx.state.userId = decode.id;
         yield next();
     }
