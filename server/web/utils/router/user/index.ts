@@ -15,7 +15,9 @@ type Customer = {
 };
 const router = new Router<any, Customer>();
 
-router.post('/register', async (ctx) => {
+const PREFIX = '/api/user';
+
+router.post(`${PREFIX}/register`, async (ctx) => {
     const { username, password } = ctx.request.body;
 
     if (!username || !password) {
@@ -37,7 +39,7 @@ router.post('/register', async (ctx) => {
 
 });
 
-router.post('/login', async (ctx) => {
+router.post(`${PREFIX}/login`, async (ctx) => {
     const { username, password } = ctx.request.body;
 
     if (!username || !password) {
@@ -81,7 +83,7 @@ router.post('/login', async (ctx) => {
       ctx.status = 500;
       ctx.body = 'Error on the server.';
     }
-  });
+});
 
 export {
     router

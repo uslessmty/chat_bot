@@ -17,7 +17,8 @@ const db_1 = require("../../db");
 const jwt_1 = require("../../../../const/jwt");
 const router = new Router();
 exports.router = router;
-router.post('/register', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+const PREFIX = '/api/user';
+router.post(`${PREFIX}/register`, (ctx) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = ctx.request.body;
     if (!username || !password) {
         ctx.status = 400;
@@ -35,7 +36,7 @@ router.post('/register', (ctx) => __awaiter(void 0, void 0, void 0, function* ()
         ctx.body = 'Error on the server.';
     }
 }));
-router.post('/login', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+router.post(`${PREFIX}/login`, (ctx) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = ctx.request.body;
     if (!username || !password) {
         ctx.status = 400;
@@ -61,7 +62,7 @@ router.post('/login', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         const token = jwt.sign({ id: user.id }, jwt_1.JWT_SECRET, {
-            expiresIn: 8640000 // 24 hours
+            expiresIn: 86400000 // 24 * 1000 hours
         });
         ctx.status = 200;
         ctx.body = { auth: true, token: token };

@@ -5,6 +5,7 @@ const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const json = require("koa-json");
 const user_1 = require("./utils/router/user");
+require("./utils/vector");
 (0, dotenv_1.config)();
 const app = new Koa();
 app.use(bodyParser());

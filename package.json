@@ -8,6 +8,7 @@
   "author": "tengyu",
   "license": "ISC",
   "dependencies": {
+    "@zilliz/milvus2-sdk-node": "2.2.24",
     "bcryptjs": "2.4.3",
     "dotenv": "16.4.5",
     "jsonwebtoken": "9.0.2",
@@ -16,7 +17,7 @@
     "koa-json": "2.0.2",
     "koa-mysql-session": "0.0.2",
     "koa-router": "12.0.1",
-    "mysql2": "^3.9.7"
+    "mysql2": "3.9.7"
   },
   "devDependencies": {
     "@types/koa": "^2.15.0",
