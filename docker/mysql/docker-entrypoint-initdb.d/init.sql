@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `chat_windows` (
   `window_id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL,
-  `avatar` VARCHAR(255) NOT NULL,
+  `avatar` TEXT NOT NULL,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS `chats` (
   `user_id` INT NOT NULL,
   `user_message` TEXT,
   `avatar_response` TEXT,
+  `create_time` BIGINT, 
+  `modify_time` BIGINT, 
   FOREIGN KEY (`window_id`) REFERENCES `chat_windows`(`window_id`) ON DELETE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
